@@ -6,5 +6,6 @@ namespace CodeNest.BLL.Service
     {
 
         Task<ValidationDto> Validate(string jsonObject);
+        Task<ValidationDto> Save(string jsonInput, string workspaceId, string userId);
     }
 }

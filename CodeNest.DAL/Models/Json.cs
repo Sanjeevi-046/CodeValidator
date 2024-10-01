@@ -8,7 +8,8 @@ namespace CodeNest.DAL.Models
         [BsonId]
         [BsonElement("_id"), BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; } = string.Empty;
-
+        [BsonElement("Name")]
+        public string Name { get; set; }
         public string JsonInput { get; set; }
         public string JsonOutput { get; set; }
         [BsonRepresentation(BsonType.ObjectId)]

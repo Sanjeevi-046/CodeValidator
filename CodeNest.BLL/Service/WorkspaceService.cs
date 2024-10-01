@@ -15,23 +15,54 @@ namespace CodeNest.BLL.Service
             _mapper = mapper;
         }
 
-        public async Task<bool> CreateWorkspace(WorkspacesDto workspacesDto)
+        public async Task<ValidationDto> CreateWorkspace(string name , string userId)
         {
-            var result = await _mongoService.workSpaces.Find(x => x.Name == workspacesDto.Name).FirstOrDefaultAsync();
-
-            if (result != null)
-            {
-                return false;
-            }
             try
             {
-                await _mongoService.workSpaces.InsertOneAsync(_mapper.Map<Workspaces>(workspacesDto));
-                return true;
+                var workspaceDto = new WorkspacesDto();
+                workspaceDto.Name = name + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                workspaceDto.CreatedBy = userId;
+                workspaceDto.CreatedOn = DateTime.Now.ToString();
+                var workspace = _mapper.Map<Workspaces>(workspaceDto);
+                try
+                {
+                    await _mongoService.workSpaces.InsertOneAsync(workspace);
+                    var workspaceId = workspace.Id.ToString(); // Make sure workspace.Id is of type ObjectId
+
+                    var userDetail = await _mongoService.userModel.Find(x=>x.Id == userId).FirstOrDefaultAsync();
+                    if (userDetail != null) 
+                    {
+                        userDetail.Workspaces.Add(workspace.Id);
+                        var updateDefinition = Builders<Users>.Update.Set(u => u.Workspaces, userDetail.Workspaces);
+                        await _mongoService.userModel.UpdateOneAsync(x => x.Id == userId, updateDefinition);
+                    }
+                }
+                catch
+                {
+                    return new ValidationDto
+                    {
+                        IsValid = false,
+                        Message = "Error occured while creating Namespace!",
+                        
+                    };
+                }
+               
+                return new ValidationDto
+                {
+                    IsValid = true,
+                    Message ="Created Namespace successfully!",
+                    objectID = workspace.Id
+                   
+                };
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                return false;
+                return new ValidationDto
+                {
+                    IsValid = false,
+                    Message = "Error occured while creating Namespace!",
+                };
             }
         }
     }

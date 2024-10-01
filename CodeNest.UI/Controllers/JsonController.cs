@@ -32,5 +32,31 @@ namespace CodeNest.UI.Controllers
             ViewBag.ErrorMessage = result.Message;
             return View(result.jsonDto);
         }
+        #region JsonFunctiom
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="JsonInput"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> Save(string JsonInput)
+        {
+            var workspaceId = HttpContext.Session.GetString("WorkspaceId");
+            var userId = HttpContext.Session.GetString("UserID");
+
+            var result = await _jsonService.Save(JsonInput, workspaceId, userId);
+            if (result.IsValid)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+
+            return View();
+        }
+        #endregion
+        #region xml
+
+
+        #endregion
     }
 }

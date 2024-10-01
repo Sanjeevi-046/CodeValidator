@@ -10,6 +10,7 @@ builder.Services.AddSingleton<MangoDbService>();
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IJsonService, JsonService>();
+builder.Services.AddTransient<IWorkspaceService, WorkspaceService>();   
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient("", _client =>
 {

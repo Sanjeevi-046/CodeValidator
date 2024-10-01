@@ -182,7 +182,7 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@userName <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a asp-action="" asp-controller="" method="" >Profile</a></li>
+                            <li><a asp-action="Profile" asp-controller="Profile" method="get">Profile</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="#">Logout</a></li>
                         </ul>
@@ -199,18 +199,20 @@
                     <h5 class="modal-title" id="workspaceModalLabel">Create Workspace</h5>
 
                 </div>
+                <form asp-action="Create" asp-controller="WorkSpace" method="post" id="workspaceForm">
                 <div class="modal-body">
-                    <form asp-action="" asp-controller="" method="post" id="workspaceForm">
+                   
                         <div class="form-group">
                             <label for="workspaceName">Workspace Name</label>
-                            <input type="text" class="form-control" id="workspaceName" placeholder="Enter workspace name" required>
+                            <input type="text" class="form-control" id="workspaceName" name="name" placeholder="Enter workspace name" required>
                         </div>
-                    </form>
+                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="createWorkspaceBtn">Create Workspace</button>
+                    <button type="submit" class="btn btn-primary" id="createWorkspaceBtn">Create Workspace</button>
                 </div>
+                </form>
             </div>
         </div>
     </div>
@@ -357,11 +359,7 @@
             // Handle the create workspace button click
             $('#createWorkspaceBtn').click(function () {
                 const workspaceName = $('#workspaceName').val();
-                if (workspaceName) {
-                    // Logic to create workspace goes here
-                    alert('Workspace "' + workspaceName + '" created!');
-                    $('#workspaceModal').modal('hide');
-                } else {
+                if (workspaceName == null) {
                     alert('Please enter a workspace name.');
                 }
             });
